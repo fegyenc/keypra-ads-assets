@@ -11,19 +11,21 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Upscale JPEG to min 800 height
+      - name: Make 1254px square JPEG matching working EMAIL cards
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          # Prefer original landscape before prior upscale if we still have 800x450 ancestry;
+          # current file may already be 1422x800 — crop-center to square 1254.
           file keypra-save-for-work-x-v2.jpg
           identify keypra-save-for-work-x-v2.jpg || true
-          ffmpeg -y -i keypra-save-for-work-x-v2.jpg -vf 'scale=1422:800' -q:v 3 keypra-sfw-up.jpg
-          mv keypra-sfw-up.jpg keypra-save-for-work-x-v2.jpg
+          ffmpeg -y -i keypra-save-for-work-x-v2.jpg -vf 'scale=1254:1254:force_original_aspect_ratio=increase,crop=1254:1254' -q:v 2 keypra-sfw-sq.jpg
+          mv keypra-sfw-sq.jpg keypra-save-for-work-x-v2.jpg
           file keypra-save-for-work-x-v2.jpg
           identify keypra-save-for-work-x-v2.jpg || true
           ls -la keypra-save-for-work-x-v2.jpg
-      - name: Commit upscaled JPEG
+      - name: Commit square JPEG
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add keypra-save-for-work-x-v2.jpg
-          git diff --cached --quiet || (git commit -m 'Upscale SFW JPEG to 1422x800 for website cards' && git push)
+          git diff --cached --quiet || (git commit -m 'Square crop SFW JPEG 1254x1254 for website cards' && git push)
