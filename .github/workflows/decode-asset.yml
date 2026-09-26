@@ -13,15 +13,15 @@ jobs:
       - uses: actions/checkout@v4
       - name: Decode JPEG
         run: |
-          if [ -f assets/sfw800.jpg.b64 ]; then
-            base64 -d assets/sfw800.jpg.b64 > keypra-save-for-work-x-v2.jpg
-          elif ls assets/sfw800.jpg.b64.part-* 1>/dev/null 2>&1; then
-            cat assets/sfw800.jpg.b64.part-* > /tmp/all.b64
-            base64 -d /tmp/all.b64 > keypra-save-for-work-x-v2.jpg
-          elif [ -f assets/sfw1200.jpg.b64 ]; then
+          if [ -f assets/sfw1200.jpg.b64 ]; then
             base64 -d assets/sfw1200.jpg.b64 > keypra-save-for-work-x-v2.jpg
           elif ls assets/sfw1200.jpg.b64.part-* 1>/dev/null 2>&1; then
             cat assets/sfw1200.jpg.b64.part-* > /tmp/all.b64
+            base64 -d /tmp/all.b64 > keypra-save-for-work-x-v2.jpg
+          elif [ -f assets/sfw800.jpg.b64 ]; then
+            base64 -d assets/sfw800.jpg.b64 > keypra-save-for-work-x-v2.jpg
+          elif ls assets/sfw800.jpg.b64.part-* 1>/dev/null 2>&1; then
+            cat assets/sfw800.jpg.b64.part-* > /tmp/all.b64
             base64 -d /tmp/all.b64 > keypra-save-for-work-x-v2.jpg
           else
             cat assets/keypra-save-for-work-x-v2.jpg.b64.part-* > /tmp/all.b64
@@ -35,4 +35,4 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add keypra-save-for-work-x-v2.jpg
-          git diff --cached --quiet || (git commit -m 'Add decoded Save-for-work v2 JPEG 800' && git push)
+          git diff --cached --quiet || (git commit -m 'Add decoded Save-for-work v2 JPEG 1200x800' && git push)
